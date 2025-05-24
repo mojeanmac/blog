@@ -23,10 +23,6 @@
     <loc>http://localhost:1313/blog/</loc>
     <lastmod>2022-08-25T21:30:04+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/blog/posts/tags/security/</loc>
-  </url><url>
-    <loc>http://localhost:1313/blog/posts/tags/social-engineering/</loc>
-  </url><url>
     <loc>http://localhost:1313/blog/categories/</loc>
   </url>
 </urlset>
