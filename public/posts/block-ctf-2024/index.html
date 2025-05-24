@@ -65,7 +65,7 @@
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> y <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">0</span>, height, <span style="color:#ae81ff">2</span>):
 </span></span><span style="display:flex;"><span>            new_img<span style="color:#f92672">.</span>putpixel((x <span style="color:#f92672">//</span> <span style="color:#ae81ff">2</span>, y <span style="color:#f92672">//</span> <span style="color:#ae81ff">2</span>), img<span style="color:#f92672">.</span>getpixel((x, y)))
 </span></span><span style="display:flex;"><span>    new_img<span style="color:#f92672">.</span>save(<span style="color:#e6db74">&#34;elf-crop-small.png&#34;</span>)
-</span></span></code></pre></div><p><img src="/block/elf-crop-small.png" alt="result"></p>
+</span></span></code></pre></div><p><img src="blog/block/elf-crop-small.png" alt="result"></p>
 <p>I adapted some of <a href="https://replit.com/@molly30/Kitty-Steganography#README.md">the python</a> I wrote for a <a href="https://docs.google.com/presentation/d/1ciClWVrxGWm2nRxe3EIslmAv1vtBA__4nUsYF9Yz1jQ/edit#slide=id.g2cac06ecf6d_0_62">workshop on LSB steganography</a> for high schoolers last year to read the full R, G, and B values as bytes and decode them into characters. My first time around, I could definitely parse ascii characters and seemed to resemble <code>.ELF</code> format, but the order seemed somewhat scrambled. This program was heavily commented for clarity, since probably less than half of the room knew python. I left the comments in cause why not.
 Here&rsquo;s a snippet:</p>
 <pre tabindex="0"><code>wrageimpnglf.ead reageimpngut.inp
@@ -93,24 +93,24 @@ Here&rsquo;s a snippet:</p>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">with</span> open(<span style="color:#e6db74">&#34;elfy.elf&#34;</span>, <span style="color:#e6db74">&#34;wb&#34;</span>) <span style="color:#66d9ef">as</span> f:
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> byte <span style="color:#f92672">in</span> binary:
 </span></span><span style="display:flex;"><span>        f<span style="color:#f92672">.</span>write(bytes([int(byte, <span style="color:#ae81ff">2</span>)]))
-</span></span></code></pre></div><p><a href="/block/elfy.elf">Resulting ELF</a></p>
+</span></span></code></pre></div><p><a href="blog/block/elfy.elf">Resulting ELF</a></p>
 <p>Here&rsquo;s where the actual revving comes in!</p>
 <p>To view it, I googled &ldquo;elf view on mac&rdquo; and downloaded the release from the first <a href="https://github.com/horsicq/XELFViewer">github page</a> that came up. This turned out to have a surprise.</p>
-<p><img src="/block/xelf.png" alt="xelf"></p>
+<p><img src="blog/block/xelf.png" alt="xelf"></p>
 <p>The developer is very cracked, but this was a top 10 scary experience.</p>
 <p>My friend pointed me to <a href="https://cutter.re/">Cutter</a>, which has a few more useful features. Looking at the recompiler, we saw that there was something being drawn with ImageMagick to the bottom left corner with constant green and blue value.</p>
-<p><img src="/block/magick.png" alt="decomp"></p>
+<p><img src="blog/block/magick.png" alt="decomp"></p>
 <p>And there it is! The square was in plain sight all along!</p>
-<p><img src="/block/square.png" alt="square"></p>
-<p><img src="/block/elf-square.png" alt="square cropped"></p>
+<p><img src="blog/block/square.png" alt="square"></p>
+<p><img src="blog/block/elf-square.png" alt="square cropped"></p>
 <p>Okay, lets look at just the least significant bit of red and try to remake the flag!</p>
 <pre tabindex="0"><code>QÕhü¥¹hüI ¹IÆÆúÆqq¹õüI ÕQþ
 </code></pre><p>Hmm, it also looks like it goes through a function called <code>mask_flag</code> before being written to the image</p>
-<p><img src="/block/main.png" alt="main"></p>
-<p><img src="/block/mask.png" alt="mask"></p>
+<p><img src="blog/block/main.png" alt="main"></p>
+<p><img src="blog/block/mask.png" alt="mask"></p>
 <p>SBOX is likely a lookup table, so the indexes of the bytes I extracted above should correspond to the character values we need!</p>
 <p>My friend found it in memory and pasted the raw bytes into discord&hellip;</p>
-<p><img src="/block/discord.png" alt="discord"></p>
+<p><img src="blog/block/discord.png" alt="discord"></p>
 <p>Okay, I can work with this, just do some string comparison with the bytes while taking care to iterate over every two characters:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> PIL <span style="color:#f92672">import</span> Image
 </span></span><span style="display:flex;"><span>src <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;elf-square.png&#34;</span>

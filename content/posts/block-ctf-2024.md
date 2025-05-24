@@ -30,7 +30,7 @@ with Image.open("elf-cropped.png") as img:
             new_img.putpixel((x // 2, y // 2), img.getpixel((x, y)))
     new_img.save("elf-crop-small.png")
 ```
-![result](/block/elf-crop-small.png)
+![result](blog/block/elf-crop-small.png)
 
 I adapted some of [the python](https://replit.com/@molly30/Kitty-Steganography#README.md) I wrote for a [workshop on LSB steganography](https://docs.google.com/presentation/d/1ciClWVrxGWm2nRxe3EIslmAv1vtBA__4nUsYF9Yz1jQ/edit#slide=id.g2cac06ecf6d_0_62) for high schoolers last year to read the full R, G, and B values as bytes and decode them into characters. My first time around, I could definitely parse ascii characters and seemed to resemble `.ELF` format, but the order seemed somewhat scrambled. This program was heavily commented for clarity, since probably less than half of the room knew python. I left the comments in cause why not.
 Here's a snippet:
@@ -65,25 +65,25 @@ with open("elfy.elf", "wb") as f:
         f.write(bytes([int(byte, 2)]))
 
 ```
-[Resulting ELF](/block/elfy.elf)
+[Resulting ELF](blog/block/elfy.elf)
 
 Here's where the actual revving comes in!
 
 To view it, I googled "elf view on mac" and downloaded the release from the first [github page](https://github.com/horsicq/XELFViewer) that came up. This turned out to have a surprise.
 
-![xelf](/block/xelf.png)
+![xelf](blog/block/xelf.png)
 
 The developer is very cracked, but this was a top 10 scary experience.
 
 My friend pointed me to [Cutter](https://cutter.re/), which has a few more useful features. Looking at the recompiler, we saw that there was something being drawn with ImageMagick to the bottom left corner with constant green and blue value.
 
-![decomp](/block/magick.png)
+![decomp](blog/block/magick.png)
 
 And there it is! The square was in plain sight all along!
 
-![square](/block/square.png)
+![square](blog/block/square.png)
 
-![square cropped](/block/elf-square.png)
+![square cropped](blog/block/elf-square.png)
 
 Okay, lets look at just the least significant bit of red and try to remake the flag!
 ```
@@ -92,15 +92,15 @@ QÕhü¥¹hüI ¹IÆÆúÆqq¹õüI ÕQþ
 
 Hmm, it also looks like it goes through a function called `mask_flag` before being written to the image
 
-![main](/block/main.png)
+![main](blog/block/main.png)
 
-![mask](/block/mask.png)
+![mask](blog/block/mask.png)
 
 SBOX is likely a lookup table, so the indexes of the bytes I extracted above should correspond to the character values we need!
 
 My friend found it in memory and pasted the raw bytes into discord...
 
-![discord](/block/discord.png)
+![discord](blog/block/discord.png)
 
 Okay, I can work with this, just do some string comparison with the bytes while taking care to iterate over every two characters:
 
