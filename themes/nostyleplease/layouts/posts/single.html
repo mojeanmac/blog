@@ -8,7 +8,7 @@
       tags: [
       {{- range $i, $tag := . -}}
         {{ if $i }}, {{ end -}}
-        <a href="{{ "/tags/" | relURL }}{{ $tag | urlize }}">{{ $tag }}</a>
+        <a href="{{ "/blog/tags/" | relURL }}{{ $tag | urlize }}">{{ $tag }}</a>
       {{- end -}}
       ]
     </p>
